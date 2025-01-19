@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:bookworm
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - flask-app
+      - aiohttp-app
+      - express-app
+    networks:
+      - app-net
+
+  flask-app:
+    build: ./app_flask
+    ports:
+      - "5000:5000"
+    networks:
+      - app-net
+
+  aiohttp-app:
+    build: ./app_aiohttp
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+
+  express-app:
+    build: ./app_express
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
+
+  locust-master:
+    image: locustio/locust:2.32.6
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master --tags aiohttp -H http://nginx
+    networks:
+      - app-net
+
+  locust-worker:
+    image: locustio/locust:2.32.6
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --tags aiohttp --master-host locust-master
+    networks:
+      - app-net
+    depends_on:
+      - locust-master
+    deploy:
+      replicas: 4
+
+networks:
+  app-net:
+    driver: bridge

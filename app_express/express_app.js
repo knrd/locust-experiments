@@ -30,10 +30,10 @@ app.post('/', (req, res) => {
                 console.error('Error processing JSON:', error);
             })
             .finally(() => {
-                res.status(200).send('OK');
+                res.status(200).send('OK express cookie');
             });
     } else {
-        res.status(200).send('OK');
+        res.status(200).send('OK express no ctest cookie');
     }
 });
 

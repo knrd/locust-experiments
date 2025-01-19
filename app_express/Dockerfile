@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 3000
 
 # Start command
-CMD ["node", "app.js"]
+CMD ["node", "express_app.js"]

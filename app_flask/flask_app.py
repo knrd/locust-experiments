@@ -1,12 +1,13 @@
 from flask import Flask, request
 import logging
+from random import randint
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def handle_request():
     if 'ctest' in request.cookies:
         try:
@@ -15,7 +16,9 @@ def handle_request():
         except Exception as e:
             logger.error(f"Error processing JSON: {e}")
     
-    return "OK", 200
+    # if randint(1, 25) >= 24:
+    #     1 / 0
+    return "OK flask", 200
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host="0.0.0.0", port=5000)

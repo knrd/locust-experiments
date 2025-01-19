@@ -1,5 +1,6 @@
 from aiohttp import web
 import logging
+from random import randint
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,7 +13,9 @@ async def handle_request(request):
         except Exception as e:
             logger.error(f"Error processing JSON: {e}")
     
-    return web.Response(text="OK", status=200)
+    # if randint(1, 25) >= 24:
+    #     1 / 0
+    return web.Response(text="OK aiohttp", status=200)
 
 app = web.Application()
 app.router.add_post('/', handle_request)
