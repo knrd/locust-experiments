@@ -6,7 +6,8 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx.conf
+      - ./nginx_default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - flask-app
       - aiohttp-app
@@ -41,7 +42,7 @@ services:
       - "8089:8089"
     volumes:
       - ./:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --master --tags aiohttp -H http://nginx
+    command: -f /mnt/locust/locustfile.py --master --tags express aiohttp -H http://nginx
     networks:
       - app-net
 
@@ -49,7 +50,7 @@ services:
     image: locustio/locust:2.32.6
     volumes:
       - ./:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --worker --tags aiohttp --master-host locust-master
+    command: -f /mnt/locust/locustfile.py --worker --tags express aiohttp --master-host locust-master
     networks:
       - app-net
     depends_on:
